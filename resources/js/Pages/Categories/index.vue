@@ -1,28 +1,98 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DangerButton from '@/Components/DangerButton.vue';
-import { Head,Link,useForm } from '@inertiajs/vue3';
+import InputError from '@/Components/InputError.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import TextInput from '@/Components/TextInput.vue';
+import SelectInput from '@/Components/SelectInput.vue';
+import WarningButton from '@/Components/WarningButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import Modal from '@/Components/Modal.vue';
+import { Head, useForm } from '@inertiajs/vue3';
+import { nextTick, ref } from 'vue';
 import Swal from 'sweetalert2';
+import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
 import { Result } from 'postcss';
 
+
+const nameInput = ref(null);
+const modal = ref(false);
+const title = ref('');
+const operation = ref(1);
+const id = ref('');
+
 const props = defineProps({
-    categories:{type:Object}
+    categories: { type: Object }
 });
 const form = useForm({
-    id:''
+    name:'', state:''
 });
-const deleteCategory = (id,name) =>{
+
+const formPage = useForm({});
+const onPageClick = (event) => {
+    formPage.get(route('categories.index', { page: event }));
+};
+const openModal = (op, name, state, category) => {
+
+    modal.value = true;
+    nextTick( () => nameInput.value.focus());
+    operation.value = op;
+    id.value = category;
+
+    if (op == 1) {
+
+        title.value = 'Crear Categoria'
+
+    } else {
+        title.value = 'Editar Categoria'
+        form.name = name;
+        form.state = state;
+    }
+
+}
+
+const closeModal = () => {
+
+    modal.value = false;
+    form.reset();
+
+}
+
+const save = () => {
+
+   if (operation.value == 1) {
+       form.post(route('categories.store'),{
+            onSuccess: () => {ok('Categoria Creada')}
+       })
+   } else {
+    form.post(route('categories.update', id.value),{
+            onSuccess: () => {ok('Categoria Actualizada')}
+       })
+   }
+
+}
+
+const ok = (msj) =>{
+    form.reset();
+    closeModal();
+    Swal.fire({title:msj, icon:'success'});
+}
+
+const deleteCategory = (id, name) => {
     const alerta = Swal.mixin({
-        buttonsStyling:true
+        buttonsStyling: true
     });
     alerta.fire({
-        title:'Seguro deseas eliminar '+name+' ?',
-        icon: 'question', showCancelButton:true,
-        confirmButtonText: '<i class="fa-solid fa-check"></i> Yes,delete',
-        cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancel',
+        title: 'Seguro deseas eliminar ' + name + '?',
+        icon: 'question', showCancelButton: true,
+        confirmButtonText: '<i class="fa-solid fa-check"></i> Si, Seguro',
+        cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar',
     }).then((result) => {
-        if(result.isConfirmed) {
-            form.delete(route('categories.destroy',id));
+        if (result.isConfirmed) {
+            form.delete(route('categories.destroy', id),{
+                onSuccess: () => {ok('Categoria Eliminada')}
+            });
         }
     });
 }
@@ -39,36 +109,69 @@ const deleteCategory = (id,name) =>{
         <div class="py-12">
             <div class="bg-white grid v-screen place-items-center">
                 <div class="mt-3 mb-3 flex">
+
+                    <PrimaryButton @click="openModal(1)">
+                        <i class="fa-solid fa-plus-circle"></i> Agregar
+                    </PrimaryButton>
+
                 </div>
             </div>
-            <div class="bg-white grid v-screen place-items-center">
+            <div class="bg-white grid v-screen place-items-center overflow-x-auto">
                 <table class="table-auto border border-gray-400">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="px-4 py-4">#</th>
-                            <th class="px-4 py-4">Categoria</th>
-                            <th class="px-4 py-4">Estado</th>
-                            <th class="px-4 py-4"></th>
-                            <th class="px-4 py-4"></th> 
+                            <th class="px-2 py-2">#</th>
+                            <th class="px-2 py-2">Categoria</th>
+                            <th class="px-2 py-2">Estado</th>
+                            <th class="px-2 py-2">Editar</th>
+                            <th class="px-2 py-2">Eliminar</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="cat, i in categories" :key="cat.id">
-                        <td class="border border-gray-400 px-4 py-4">{{ (i+1) }}</td>
-                        <td class="border border-gray-400 px-4 py-4">{{ (cat.name) }}</td>
-                        <td class="border border-gray-400 px-4 py-4">{{ (cat.state) }}</td>
-                        <td class="border border-gray-400 px-4 py-4">
-
-                        </td>
-                        <td class="border border-gray-400 px-4 py-4">
-                            <DangerButton @click="deleteCategory(cat.id,cat.name,cat.state)">
-                                <i class="fa-solid fa-trash"></i>
-                            </DangerButton>
-                        </td>
+                            <td class="border border-gray-400 px-2 py-2">{{ (i + 1) }}</td>
+                            <td class="border border-gray-400 px-2 py-2">{{ (cat.name) }}</td>
+                            <td class="border border-gray-400 px-2 py-2">{{ (cat.state) }}</td>
+                            <td class="border border-gray-400 px-2 py-2">
+                                <WarningButton @click="openModal(2, name, state)">
+                                    <i class="fa-solid fa-edit"></i>
+                                </WarningButton>
+                            </td>
+                            <td class="border border-gray-400 px-4 py-4">
+                                <DangerButton @click="deleteCategory(cat.id, cat.name, cat.state)">
+                                    <i class="fa-solid fa-trash"></i>
+                                </DangerButton>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+            <div class="bg-white grid v-screen place-items-center">
+                <VueTailwindPagination :current="categories.currentPage" :total="categories.total"
+                  :per-page="categories.perPage"
+                  @page-changed="onPageClick($event)"
+                ></VueTailwindPagination>   
+            </div>
         </div>
+        <Modal :show="modal" @close="closeModal"><br>
+            <h2 class="p-3 text-lg font-medium text-hray-900"> {{ title }}</h2>
+            <div class="p-3 mt-6">
+                <InputLabel for="name" value="Nombre:"></InputLabel>
+                <TextInput id="name"  v-model="form.name"
+                 type="text" class="mt-1 block w-3/4" placeholder="Nombre"></TextInput>
+                <InputError :message="form.errors.name" class="mt-2"></InputError>
+            </div>
+            <div class="p-3">
+                <InputLabel for="state" value="Estado:"></InputLabel>
+                <SelectInput id="state" :options="Activo" v-model="form.state"
+                 type="text" class="mt-1 block w-3/4" ></SelectInput>
+                <InputError :message="form.errors.state" class="mt-1 block w-3/4"></InputError>
+            </div>
+            <div class="p-3 mt-6">
+                <PrimaryButton :disabled="form.processing" @click="save">
+                    <i class="fa-solid fa-save"></i> Guardar
+                </PrimaryButton>
+            </div>
+        </Modal>
     </AuthenticatedLayout>
 </template>
