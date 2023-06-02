@@ -51,9 +51,10 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|max:150',
-            'state' => 'required|max:20'
+            'state' => 'required|max:20',
         ]);
-        $category->update($request->input());
+    
+        $category->update($request->all());
         return redirect('categories');
     }
 

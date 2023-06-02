@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('description');
             $table->float('purchase_price');
             $table->float('sale_price')->nullable(true);
+            $table->unsignedBigInteger('id_cat_fk');
+            $table->foreign('id_cat_fk')->references('id')->on('categories')->onUpdate('cascade')->onDelete('restrict');
             $table->string('photo')->nullable(false);
             $table->timestamps();
         });

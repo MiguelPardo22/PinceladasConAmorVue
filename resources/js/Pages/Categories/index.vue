@@ -13,7 +13,6 @@ import { Head, useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 import Swal from 'sweetalert2';
 import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
-import { Result } from 'postcss';
 
 
 const nameInput = ref(null);
@@ -26,17 +25,16 @@ const props = defineProps({
     categories: { type: Object }
 });
 const form = useForm({
-    name:'', state:''
+    id:'', name: '', state: '', description: ''
 });
 
 const formPage = useForm({});
 const onPageClick = (event) => {
     formPage.get(route('categories.index', { page: event }));
 };
-const openModal = (op, name, state, category) => {
+const openModal = (op, name, state,description, category) => {
 
     modal.value = true;
-    nextTick( () => nameInput.value.focus());
     operation.value = op;
     id.value = category;
 
@@ -48,6 +46,7 @@ const openModal = (op, name, state, category) => {
         title.value = 'Editar Categoria'
         form.name = name;
         form.state = state;
+        form.description = description;
     }
 
 }
@@ -61,22 +60,22 @@ const closeModal = () => {
 
 const save = () => {
 
-   if (operation.value == 1) {
-       form.post(route('categories.store'),{
-            onSuccess: () => {ok('Categoria Creada')}
-       })
-   } else {
-    form.post(route('categories.update', id.value),{
-            onSuccess: () => {ok('Categoria Actualizada')}
-       })
-   }
+    if (operation.value == 1) {
+        form.post(route('categories.store'), {
+            onSuccess: () => { ok('Categoria Creada') }
+        })
+    } else {
+        form.put(route('categories.update', id.value), {
+            onSuccess: () => { ok('Categoria Actualizada') }
+        })
+    }
 
 }
 
-const ok = (msj) =>{
+const ok = (msj) => {
     form.reset();
     closeModal();
-    Swal.fire({title:msj, icon:'success'});
+    Swal.fire({ title: msj, icon: 'success' });
 }
 
 const deleteCategory = (id, name) => {
@@ -90,8 +89,8 @@ const deleteCategory = (id, name) => {
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar',
     }).then((result) => {
         if (result.isConfirmed) {
-            form.delete(route('categories.destroy', id),{
-                onSuccess: () => {ok('Categoria Eliminada')}
+            form.delete(route('categories.destroy', id), {
+                onSuccess: () => { ok('Categoria Eliminada') }
             });
         }
     });
@@ -111,7 +110,7 @@ const deleteCategory = (id, name) => {
                 <div class="mt-3 mb-3 flex">
 
                     <PrimaryButton @click="openModal(1)">
-                        <i class="fa-solid fa-plus-circle"></i> Agregar
+                        <i class="fa-solid fa-plus-circle"></i>&nbsp Agregar
                     </PrimaryButton>
 
                 </div>
@@ -123,6 +122,7 @@ const deleteCategory = (id, name) => {
                             <th class="px-2 py-2">#</th>
                             <th class="px-2 py-2">Categoria</th>
                             <th class="px-2 py-2">Estado</th>
+                            <th class="px-2 py-2">Descripcion</th>
                             <th class="px-2 py-2">Editar</th>
                             <th class="px-2 py-2">Eliminar</th>
                         </tr>
@@ -132,8 +132,9 @@ const deleteCategory = (id, name) => {
                             <td class="border border-gray-400 px-2 py-2">{{ (i + 1) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.name) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.state) }}</td>
+                            <td class="border border-gray-400 px-2 py-2">{{ (cat.description) }}</td>
                             <td class="border border-gray-400 px-2 py-2">
-                                <WarningButton @click="openModal(2, name, state)">
+                                <WarningButton @click="openModal(2, cat.name, cat.state, cat.description)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
@@ -148,24 +149,39 @@ const deleteCategory = (id, name) => {
             </div>
             <div class="bg-white grid v-screen place-items-center">
                 <VueTailwindPagination :current="categories.currentPage" :total="categories.total"
-                  :per-page="categories.perPage"
-                  @page-changed="onPageClick($event)"
-                ></VueTailwindPagination>   
+                    :per-page="categories.perPage" @page-changed="onPageClick($event)">
+                </VueTailwindPagination>
             </div>
         </div>
         <Modal :show="modal" @close="closeModal"><br>
             <h2 class="p-3 text-lg font-medium text-hray-900"> {{ title }}</h2>
             <div class="p-3 mt-6">
                 <InputLabel for="name" value="Nombre:"></InputLabel>
-                <TextInput id="name"  v-model="form.name"
-                 type="text" class="mt-1 block w-3/4" placeholder="Nombre"></TextInput>
+                <TextInput id="name" v-model="form.name" type="text" class="mt-1 block w-3/4" placeholder="Nombre">
+                </TextInput>
                 <InputError :message="form.errors.name" class="mt-2"></InputError>
             </div>
-            <div class="p-3">
+            <!-- <div class="p-3">
+                        <InputLabel for="state" value="Estado:"></InputLabel>
+                        <select id="state" v-model="form.state"
+                         type="text" class="mt-1 block w-3/4" >
+                        <option value="Activo">Activo</option>
+                        <option value="Inactivo">Inactivo</option>
+                
+                        </select>
+                        <InputError :message="form.errors.state" class="mt-1 block w-3/4"></InputError>
+                    </div> -->
+            <div class="p-3 mt-6">
                 <InputLabel for="state" value="Estado:"></InputLabel>
-                <SelectInput id="state" :options="Activo" v-model="form.state"
-                 type="text" class="mt-1 block w-3/4" ></SelectInput>
-                <InputError :message="form.errors.state" class="mt-1 block w-3/4"></InputError>
+                <TextInput id="state" v-model="form.state" type="text" class="mt-1 block w-3/4" placeholder="Estado">
+                </TextInput>
+                <InputError :message="form.errors.state" class="mt-2"></InputError>
+            </div>
+            <div class="p-3 mt-6">
+                <InputLabel for="description" value="Descripcion:"></InputLabel>
+                <TextInput id="description" v-model="form.description" type="text" class="mt-1 block w-3/4" placeholder="Estado">
+                </TextInput>
+                <InputError :message="form.errors.description" class="mt-2"></InputError>
             </div>
             <div class="p-3 mt-6">
                 <PrimaryButton :disabled="form.processing" @click="save">

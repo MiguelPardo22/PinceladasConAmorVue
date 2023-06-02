@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('size');
             $table->string('material');
             $table->string('brand');
-            $table->unsignedBigInteger('id_cat_fk');
-            $table->foreign('id_cat_fk')->references('id')->on('categories')->onUpdate('cascade')->onDelete('restrict');
             $table->unsignedBigInteger('id_prod_fk');
             $table->foreign('id_prod_fk')->references('id')->on('products')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
