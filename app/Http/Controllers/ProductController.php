@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,8 +14,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return Inertia::render('Products/index', ['products' => $products]);
+       
+        $products = Product::select('products.id', 'reference', 'products.name', 'products.description', 'purchase_price',
+         'sale_price', 'id_cat_fk', 'photo', 'categories.name as category')
+         ->join('categories', 'categories.id', '=', 'products.id_cat_fk')->paginate(10);
+
+        $categories = Category::all();
+        return Inertia::render('Products/index', ['products' => $products, 'categories' => $categories]);
     }
 
     /**

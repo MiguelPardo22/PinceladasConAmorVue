@@ -27,7 +27,7 @@ const props = defineProps({
     categories: { type: Object }
 });
 const form = useForm({
-    reference:'', name:'', description:'', purchase_price:'', sale_price:'', photo:'', category:  ''
+    reference: '', name: '', description: '', purchase_price: '', sale_price: '', id_cat_fk: '', photo: ''
 });
 
 const formPage = useForm({});
@@ -35,19 +35,79 @@ const formPage = useForm({});
 const onPageClick = (event) => {
     formPage.get(route('products.index', { page: event }));
 };
+
+const openModal = (op, reference, name, description, purchase_price, sale_price, category, photo, product) => {
+
+    modal.value = true;
+    operation.value = op
+    id.value = product
+
+    if (op == 1) {
+
+        title.value = 'Crear Producto';
+
+    } else {
+
+        title.value = 'Editar Producto';
+
+        form.reference = reference
+        form.name = name;
+        form.description = description;
+        form.purchase_price = purchase_price;
+        form.sale_price = sale_price;
+        form.id_cat_fk = category;
+        form.photo = photo;
+
+
+    }
+
+}
+
+const closeModal = () => {
+
+    modal.value = false;
+    form.reset();
+
+}
+
+const save = () => {
+
+    if (operation.value == 1) {
+
+        form.post(route('product.store'), {
+            onSuccess: () => { ok('Producto Creado') }
+        });
+
+    } else {
+
+        form.put(route('product.update', id.value), {
+            onSuccess: () => { ok('Producto Actualizado') }
+        });
+
+    }
+}
+
+const ok = (msj) => {
+
+    form.reset();
+    closeModal();
+    Swal.fire({ title: msj, icon: 'success' });
+
+}
+
 const deleteProduct = (id, name) => {
     const alerta = Swal.mixin({
         buttonsStyling: true
     });
     alerta.fire({
-        title: 'Seguro deseas eliminar ' + name +' ?',
+        title: 'Seguro deseas eliminar ' + name + ' ?',
         icon: 'question', showCancelButton: true,
         confirmButtonText: '<i class="fa-solid fa-check"></i> Si, Seguro',
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar',
     }).then((result) => {
         if (result.isConfirmed) {
-            form.delete(route('products.destroy', id),{
-                onSuccess: () => {ok('Producto Eliminada')}
+            form.delete(route('products.destroy', id), {
+                onSuccess: () => { ok('Producto Eliminada') }
             });
         }
     });
@@ -89,7 +149,7 @@ const deleteProduct = (id, name) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="pro, i in products" :key="pro.id">
+                        <tr v-for="pro, i in products.data" :key="pro.id">
                             <td class="border border-gray-400 px-2 py-2">{{ (i + 1) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.reference) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.name) }}</td>
@@ -99,7 +159,8 @@ const deleteProduct = (id, name) => {
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.category) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.photo) }}</td>
                             <td class="border border-gray-400 px-2 py-2">
-                                <WarningButton @click="openModal(2, id, reference, name, description, purchase_price, sale_price, photo)">
+                                <WarningButton
+                                    @click="openModal(2, pro.reference, pro.name, pro.description, pro.purchase_price, pro.sale_price, pro.id_cat_fk, pro.photo, pro.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
@@ -110,8 +171,23 @@ const deleteProduct = (id, name) => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table><br>
+                <div class="bg-white grid v-screen place-items-center">
+                    <VueTailwindPagination :current="products.currentPage" :total="products.total"
+                        :per-page="products.perPage">
+                        @page-changed="$event => onPageClick($event)"
+                    </VueTailwindPagination>
+                </div>
             </div>
+            <Modal :show="modal" @close="closeModal">
+                  <h2 class="p-3 text-lg font.medium text-hray-900">{{ title }}</h2>
+                  <div class="p-3 mt-6">
+                    <InputLabel for="reference" value="Referencia"></InputLabel>
+                    <TextInput id="reference" ref="nameInput" v-model="form.reference"
+                    type="number" class="mt-1 block w-3/4" placeholder="Referencia"></TextInput>
+                    <InputError :message="form.errors.reference"></InputError>
+                  </div>
+            </Modal>
         </div>
     </AuthenticatedLayout>
 </template>

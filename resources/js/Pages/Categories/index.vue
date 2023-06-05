@@ -25,14 +25,14 @@ const props = defineProps({
     categories: { type: Object }
 });
 const form = useForm({
-   name: '', state: '', description: ''
+    name: '', state: '', description: ''
 });
 
 const formPage = useForm({});
 const onPageClick = (event) => {
     formPage.get(route('categories.index', { page: event }));
 };
-const openModal = (op, name, state,description, category) => {
+const openModal = (op, name, state, description, category) => {
 
     modal.value = true;
     operation.value = op;
@@ -134,7 +134,7 @@ const deleteCategory = (id, name) => {
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.state) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.description) }}</td>
                             <td class="border border-gray-400 px-2 py-2">
-                                <WarningButton @click="openModal(2,cat.name, cat.state, cat.description,cat.id)">
+                                <WarningButton @click="openModal(2, cat.name, cat.state, cat.description, cat.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
@@ -145,13 +145,14 @@ const deleteCategory = (id, name) => {
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table><br>
+                <div class="bg-white grid v-screen place-items-center">
+                    <VueTailwindPagination :current="categories.currentPage" :total="categories.total"
+                        :per-page="categories.perPage" @page-changed="onPageClick($event)">
+                    </VueTailwindPagination>
+                </div>
             </div>
-            <div class="bg-white grid v-screen place-items-center">
-                <VueTailwindPagination :current="categories.currentPage" :total="categories.total"
-                    :per-page="categories.perPage" @page-changed="onPageClick($event)">
-                </VueTailwindPagination>
-            </div>
+
         </div>
         <Modal :show="modal" @close="closeModal"><br>
             <h2 class="p-3 text-lg font-medium text-hray-900"> {{ title }}</h2>
@@ -162,24 +163,17 @@ const deleteCategory = (id, name) => {
                 <InputError :message="form.errors.name" class="mt-2"></InputError>
             </div>
             <div class="p-3">
-                        <InputLabel for="state" value="Estado:"></InputLabel>
-                        <select id="state" v-model="form.state"
-                         type="text" class="mt-1 block w-3/4" >
-                        <option value="Activo">Activo</option>
-                        <option value="Inactivo">Inactivo</option>
-                
-                        </select>
-                        <InputError :message="form.errors.state" class="mt-1 block w-3/4"></InputError>
-                    </div>
-            <!-- <div class="p-3 mt-6">
                 <InputLabel for="state" value="Estado:"></InputLabel>
-                <TextInput id="state" v-model="form.state" type="text" class="mt-1 block w-3/4" placeholder="Estado">
-                </TextInput>
-                <InputError :message="form.errors.state" class="mt-2"></InputError>
-            </div> -->
+                <select id="state" v-model="form.state" type="text" class="mt-1 block w-3/4">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+                <InputError :message="form.errors.state" class="mt-1 block w-3/4"></InputError>
+            </div>
             <div class="p-3 mt-6">
                 <InputLabel for="description" value="Descripcion:"></InputLabel>
-                <TextInput id="description" v-model="form.description" type="text" class="mt-1 block w-3/4" placeholder="Estado">
+                <TextInput id="description" v-model="form.description" type="text" class="mt-1 block w-3/4"
+                    placeholder="Estado">
                 </TextInput>
                 <InputError :message="form.errors.description" class="mt-2"></InputError>
             </div>
