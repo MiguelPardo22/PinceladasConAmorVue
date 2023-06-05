@@ -27,7 +27,7 @@ const props = defineProps({
     categories: { type: Object }
 });
 const form = useForm({
-    reference:'', name:'', description:'', purchase_price:'', sale_price:'', photo:'', 
+    reference:'', name:'', description:'', purchase_price:'', sale_price:'', photo:'', category:  ''
 });
 
 const formPage = useForm({});
@@ -67,7 +67,7 @@ const deleteProduct = (id, name) => {
                 <div class="mt-3 mb-3 flex">
 
                     <PrimaryButton @click="openModal(1)">
-                        <i class="fa-solid fa-plus-circle"></i> Agregar
+                        <i class="fa-solid fa-plus-circle"></i>&nbsp Agregar
                     </PrimaryButton>
 
                 </div>

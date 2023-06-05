@@ -25,7 +25,7 @@ const props = defineProps({
     categories: { type: Object }
 });
 const form = useForm({
-     name: '', state: '', description: ''
+   name: '', state: '', description: ''
 });
 
 const formPage = useForm({});
@@ -134,7 +134,7 @@ const deleteCategory = (id, name) => {
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.state) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.description) }}</td>
                             <td class="border border-gray-400 px-2 py-2">
-                                <WarningButton @click="openModal(2, cat.name, cat.state, cat.description)">
+                                <WarningButton @click="openModal(2,cat.name, cat.state, cat.description,cat.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
