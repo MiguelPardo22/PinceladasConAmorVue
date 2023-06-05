@@ -25,7 +25,7 @@ const props = defineProps({
     categories: { type: Object }
 });
 const form = useForm({
-    id:'', name: '', state: '', description: ''
+     name: '', state: '', description: ''
 });
 
 const formPage = useForm({});
@@ -161,7 +161,7 @@ const deleteCategory = (id, name) => {
                 </TextInput>
                 <InputError :message="form.errors.name" class="mt-2"></InputError>
             </div>
-            <!-- <div class="p-3">
+            <div class="p-3">
                         <InputLabel for="state" value="Estado:"></InputLabel>
                         <select id="state" v-model="form.state"
                          type="text" class="mt-1 block w-3/4" >
@@ -170,13 +170,13 @@ const deleteCategory = (id, name) => {
                 
                         </select>
                         <InputError :message="form.errors.state" class="mt-1 block w-3/4"></InputError>
-                    </div> -->
-            <div class="p-3 mt-6">
+                    </div>
+            <!-- <div class="p-3 mt-6">
                 <InputLabel for="state" value="Estado:"></InputLabel>
                 <TextInput id="state" v-model="form.state" type="text" class="mt-1 block w-3/4" placeholder="Estado">
                 </TextInput>
                 <InputError :message="form.errors.state" class="mt-2"></InputError>
-            </div>
+            </div> -->
             <div class="p-3 mt-6">
                 <InputLabel for="description" value="Descripcion:"></InputLabel>
                 <TextInput id="description" v-model="form.description" type="text" class="mt-1 block w-3/4" placeholder="Estado">

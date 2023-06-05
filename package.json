@@ -28,6 +28,7 @@
         "jszip": "^3.10.1",
         "pdfmake": "^0.2.7",
         "sweetalert2": "^11.7.10",
-        "vue-chartjs": "^5.2.0"
+        "vue-chartjs": "^5.2.0",
+        "ziggy": "^2.4.0"
     }
 }
