@@ -23,17 +23,19 @@ const operation = ref(1);
 const id = ref('');
 
 const props = defineProps({
-    products: { type: Object }
+    products: { type: Object },
+    categories: { type: Object }
 });
 const form = useForm({
-    Reference:'', name:'', description:'', purchase_price:'', sale_price:'', photo:''
+    reference:'', name:'', description:'', purchase_price:'', sale_price:'', photo:'', 
 });
 
 const formPage = useForm({});
+
 const onPageClick = (event) => {
     formPage.get(route('products.index', { page: event }));
 };
-const deleteProduct = (id, reference, name, description, purchase_price, sale_price, photo) => {
+const deleteProduct = (id, name) => {
     const alerta = Swal.mixin({
         buttonsStyling: true
     });
@@ -80,6 +82,7 @@ const deleteProduct = (id, reference, name, description, purchase_price, sale_pr
                             <th class="px-2 py-2">Descripcion</th>
                             <th class="px-2 py-2">Precio Compra</th>
                             <th class="px-2 py-2">Precio Venta</th>
+                            <th class="px-2 py-2">Categoria</th>
                             <th class="px-2 py-2">Foto</th>
                             <th class="px-2 py-2">Editar</th>
                             <th class="px-2 py-2">Eliminar</th>
@@ -93,6 +96,7 @@ const deleteProduct = (id, reference, name, description, purchase_price, sale_pr
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.description) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.purchase_price) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.sale_price) }}</td>
+                            <td class="border border-gray-400 px-2 py-2">{{ (pro.category) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.photo) }}</td>
                             <td class="border border-gray-400 px-2 py-2">
                                 <WarningButton @click="openModal(2, id, reference, name, description, purchase_price, sale_price, photo)">
