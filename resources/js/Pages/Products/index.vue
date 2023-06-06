@@ -13,7 +13,7 @@ import { Head, useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 import Swal from 'sweetalert2';
 import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
-import { Result } from 'postcss';
+
 
 
 const nameInput = ref(null);
@@ -74,13 +74,13 @@ const save = () => {
 
     if (operation.value == 1) {
 
-        form.post(route('product.store'), {
+        form.post(route('products.store'), {
             onSuccess: () => { ok('Producto Creado') }
         });
 
     } else {
 
-        form.put(route('product.update', id.value), {
+        form.put(route('products.update', id.value), {
             onSuccess: () => { ok('Producto Actualizado') }
         });
 
@@ -182,10 +182,56 @@ const deleteProduct = (id, name) => {
             <Modal :show="modal" @close="closeModal">
                   <h2 class="p-3 text-lg font.medium text-hray-900">{{ title }}</h2>
                   <div class="p-3 mt-6">
-                    <InputLabel for="reference" value="Referencia"></InputLabel>
+                    <InputLabel for="reference" value="Referencia:"></InputLabel>
                     <TextInput id="reference" ref="nameInput" v-model="form.reference"
                     type="number" class="mt-1 block w-3/4" placeholder="Referencia"></TextInput>
                     <InputError :message="form.errors.reference"></InputError>
+                  </div>
+                  <div class="p-3">
+                    <InputLabel for="name" value="Nombre:"></InputLabel>
+                    <TextInput id="name" ref="nameInput" v-model="form.name"
+                    type="text" class="mt-1 block w-3/4" placeholder="Nombre"></TextInput>
+                    <InputError :message="form.errors.name"></InputError>
+                  </div>
+                  <div class="p-3">
+                    <InputLabel for="description" value="Descripcion:"></InputLabel>
+                    <TextInput id="description" ref="nameInput" v-model="form.description"
+                    type="text" class="mt-1 block w-3/4" placeholder="Descripcion"></TextInput>
+                    <InputError :message="form.errors.description"></InputError>
+                  </div>
+                  <div class="p-3">
+                    <InputLabel for="purchase_price" value="Precio de Compra:"></InputLabel>
+                    <TextInput id="purchase_price" ref="nameInput" v-model="form.purchase_price"
+                    type="number" class="mt-1 block w-3/4" placeholder="Precio de Compra"></TextInput>
+                    <InputError :message="form.errors.purchase_price"></InputError>
+                  </div>
+                  <div class="p-3">
+                    <InputLabel for="purchase_price" value="Precio de Venta:"></InputLabel>
+                    <TextInput id="purchase_price" ref="nameInput" v-model="form.sale_price"
+                    type="number" class="mt-1 block w-3/4" placeholder="Precio de Compra"></TextInput>
+                    <InputError :message="form.errors.sale_price"></InputError>
+                  </div>
+                  <div class="p-3">
+                    <InputLabel for="id_cat_fk" value="Categoria:"></InputLabel>
+                    <SelectInput id="id_cat_fk" :options="categories"
+                     v-model="form.id_cat_fk" type="text" class="mt-1 block w-3/4"></SelectInput>
+                     <InputError :message="form.errors.id_cat_fk"></InputError>
+                  </div>
+                  <div class="p-3">
+                    <InputLabel for="photo" value="Foto:"></InputLabel>
+                    <TextInput id="photo" ref="nameInput" v-model="form.photo"
+                    type="text" class="mt-1 block w-3/4" placeholder="Foto del producto"></TextInput>
+                    <InputError :message="form.errors.description"></InputError>
+                  </div>
+                  <div class="p-3 mt-6">
+                    <PrimaryButton :disabled="form.processing" @click="save">
+                        <i class="fa-solid fa-save"></i>&nbsp Guardar
+                    </PrimaryButton>
+                  </div>
+                  <div class="p-3 mt-6 flex justify-end">
+                     <SecondaryButton class="ml-3" :disabled="form.processing" @click="closeModal">
+                        Cancelar
+                     </SecondaryButton>
                   </div>
             </Modal>
         </div>

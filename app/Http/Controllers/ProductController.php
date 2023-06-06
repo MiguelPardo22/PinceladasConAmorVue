@@ -36,7 +36,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $product = new Product($request->input());
+        $product->save();
+        return redirect('products');
     }
 
     /**
@@ -60,7 +62,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $product->update($request->all());
+        return redirect('products');
     }
 
     /**
