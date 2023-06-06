@@ -107,7 +107,7 @@ const deleteProduct = (id, name) => {
     }).then((result) => {
         if (result.isConfirmed) {
             form.delete(route('products.destroy', id), {
-                onSuccess: () => { ok('Producto Eliminada') }
+                onSuccess: () => { ok('Producto Eliminado') }
             });
         }
     });
