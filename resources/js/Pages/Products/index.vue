@@ -7,12 +7,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import SelectInput from '@/Components/SelectInput.vue';
 import WarningButton from '@/Components/WarningButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Modal from '@/Components/Modal.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 import Swal from 'sweetalert2';
 import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
+import InputFile from '@/Components/InputFile.vue';
 
 
 
@@ -91,7 +91,7 @@ const ok = (msj) => {
 
     form.reset();
     closeModal();
-    Swal.fire({ title: msj, icon: 'success' });
+    Swal.fire({ title: msj, icon: 'success', confirmButtonText: 'Listo' });
 
 }
 
@@ -113,6 +113,47 @@ const deleteProduct = (id, name) => {
     });
 }
 </script>
+<script>
+
+export default {
+  components: {
+    InputFile
+  },
+  data() {
+    return {
+      photo: null
+    };
+  }
+};
+
+</script>
+<style>
+.PrimaryButton:hover .fa-solid {
+    animation: flipAnimation 0.5s;
+}
+
+.WarningButton:hover .fa-solid {
+    animation: flipAnimation 0.5s;
+}
+
+.DangerButton:hover .fa-solid {
+    animation: flipAnimation 0.5s;
+}
+
+@keyframes flipAnimation {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2) rotateY(180deg);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+</style>
 
 <template>
     <Head title="Productos" />
@@ -126,7 +167,7 @@ const deleteProduct = (id, name) => {
             <div class="bg-white grid v-screen place-items-center">
                 <div class="mt-3 mb-3 flex">
 
-                    <PrimaryButton @click="openModal(1)">
+                    <PrimaryButton data-tooltip="Agregar" @click="openModal(1)">
                         <i class="fa-solid fa-plus-circle"></i>&nbsp Agregar
                     </PrimaryButton>
 
@@ -159,13 +200,13 @@ const deleteProduct = (id, name) => {
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.category) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (pro.photo) }}</td>
                             <td class="border border-gray-400 px-2 py-2">
-                                <WarningButton
+                                <WarningButton data-tooltip="Editar"
                                     @click="openModal(2, pro.reference, pro.name, pro.description, pro.purchase_price, pro.sale_price, pro.id_cat_fk, pro.photo, pro.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
                             <td class="border border-gray-400 px-4 py-4">
-                                <DangerButton @click="deleteProduct(pro.id, pro.name)">
+                                <DangerButton data-tooltip="Eliminar" @click="deleteProduct(pro.id, pro.name)">
                                     <i class="fa-solid fa-trash"></i>
                                 </DangerButton>
                             </td>
@@ -180,59 +221,56 @@ const deleteProduct = (id, name) => {
                 </div>
             </div>
             <Modal :show="modal" @close="closeModal">
-                  <h2 class="p-3 text-lg font.medium text-hray-900">{{ title }}</h2>
-                  <div class="p-3 mt-6">
+                <h2 class="p-3 text-lg font.medium text-hray-900">{{ title }}</h2>
+                <div class="p-3 mt-6">
                     <InputLabel for="reference" value="Referencia:"></InputLabel>
-                    <TextInput id="reference" ref="nameInput" v-model="form.reference"
-                    type="number" class="mt-1 block w-3/4" placeholder="Referencia"></TextInput>
+                    <TextInput id="reference" ref="nameInput" v-model="form.reference" type="number"
+                        class="mt-1 block w-3/4" placeholder="Referencia"></TextInput>
                     <InputError :message="form.errors.reference"></InputError>
-                  </div>
-                  <div class="p-3">
+                </div>
+                <div class="p-3">
                     <InputLabel for="name" value="Nombre:"></InputLabel>
-                    <TextInput id="name" ref="nameInput" v-model="form.name"
-                    type="text" class="mt-1 block w-3/4" placeholder="Nombre"></TextInput>
+                    <TextInput id="name" ref="nameInput" v-model="form.name" type="text" class="mt-1 block w-3/4"
+                        placeholder="Nombre"></TextInput>
                     <InputError :message="form.errors.name"></InputError>
-                  </div>
-                  <div class="p-3">
+                </div>
+                <div class="p-3">
                     <InputLabel for="description" value="Descripcion:"></InputLabel>
-                    <TextInput id="description" ref="nameInput" v-model="form.description"
-                    type="text" class="mt-1 block w-3/4" placeholder="Descripcion"></TextInput>
+                    <TextInput id="description" ref="nameInput" v-model="form.description" type="text"
+                        class="mt-1 block w-3/4" placeholder="Descripcion"></TextInput>
                     <InputError :message="form.errors.description"></InputError>
-                  </div>
-                  <div class="p-3">
+                </div>
+                <div class="p-3">
                     <InputLabel for="purchase_price" value="Precio de Compra:"></InputLabel>
-                    <TextInput id="purchase_price" ref="nameInput" v-model="form.purchase_price"
-                    type="number" class="mt-1 block w-3/4" placeholder="Precio de Compra"></TextInput>
+                    <TextInput id="purchase_price" ref="nameInput" v-model="form.purchase_price" type="number"
+                        class="mt-1 block w-3/4" placeholder="Precio de Compra"></TextInput>
                     <InputError :message="form.errors.purchase_price"></InputError>
-                  </div>
-                  <div class="p-3">
+                </div>
+                <div class="p-3">
                     <InputLabel for="purchase_price" value="Precio de Venta:"></InputLabel>
-                    <TextInput id="purchase_price" ref="nameInput" v-model="form.sale_price"
-                    type="number" class="mt-1 block w-3/4" placeholder="Precio de Compra"></TextInput>
+                    <TextInput id="purchase_price" ref="nameInput" v-model="form.sale_price" type="number"
+                        class="mt-1 block w-3/4" placeholder="Precio de Compra"></TextInput>
                     <InputError :message="form.errors.sale_price"></InputError>
-                  </div>
-                  <div class="p-3">
+                </div>
+                <div class="p-3">
                     <InputLabel for="id_cat_fk" value="Categoria:"></InputLabel>
-                    <SelectInput id="id_cat_fk" :options="categories"
-                     v-model="form.id_cat_fk" type="text" class="mt-1 block w-3/4"></SelectInput>
-                     <InputError :message="form.errors.id_cat_fk"></InputError>
-                  </div>
-                  <div class="p-3">
+                    <SelectInput id="id_cat_fk" :options="categories" v-model="form.id_cat_fk"
+                        class="mt-1 block w-3/4"></SelectInput>
+                    <InputError :message="form.errors.id_cat_fk"></InputError>
+                </div>
+                <div class="p-3">
                     <InputLabel for="photo" value="Foto:"></InputLabel>
-                    <TextInput id="photo" ref="nameInput" v-model="form.photo"
-                    type="text" class="mt-1 block w-3/4" placeholder="Foto del producto"></TextInput>
-                    <InputError :message="form.errors.description"></InputError>
-                  </div>
-                  <div class="p-3 mt-6">
-                    <PrimaryButton :disabled="form.processing" @click="save">
+                    <InputFile v-model="form.photo"></InputFile>
+                    <InputError :message="form.errors.photo"></InputError>
+                </div>
+                <div class="p-3 mt-6">
+                    <PrimaryButton data-tooltip="Guardar" :disabled="form.processing" @click="save">
                         <i class="fa-solid fa-save"></i>&nbsp Guardar
                     </PrimaryButton>
-                  </div>
-                  <div class="p-3 mt-6 flex justify-end">
-                     <SecondaryButton class="ml-3" :disabled="form.processing" @click="closeModal">
-                        Cancelar
-                     </SecondaryButton>
-                  </div>
+                    <DangerButton data-tooltip="Cancelar" class="ml-10" :disabled="form.processing" @click="closeModal">
+                        <i class="fa-solid fa-ban"></i>&nbsp Cancelar
+                    </DangerButton>
+                </div>
             </Modal>
         </div>
     </AuthenticatedLayout>

@@ -29,6 +29,7 @@
         "pdfmake": "^0.2.7",
         "sweetalert2": "^11.7.10",
         "vue-chartjs": "^5.2.0",
+        "vuestic-ui": "^1.6.5",
         "ziggy": "^2.4.0"
     }
 }

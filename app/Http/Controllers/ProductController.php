@@ -36,7 +36,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = new Product($request->input());
+        $product = new Product($request->all());
         $product->save();
         return redirect('products');
     }

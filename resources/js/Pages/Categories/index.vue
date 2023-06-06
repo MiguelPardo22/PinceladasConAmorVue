@@ -62,7 +62,8 @@ const save = () => {
 
     if (operation.value == 1) {
         form.post(route('categories.store'), {
-            onSuccess: () => { ok('Categoria Creada') }
+            onSuccess: () => { ok('Categoria Creada') },
+            onError: () => { error('Esta categoria ya existe')}
         })
     } else {
         form.put(route('categories.update', id.value), {
@@ -76,6 +77,11 @@ const ok = (msj) => {
     form.reset();
     closeModal();
     Swal.fire({ title: msj, icon: 'success' });
+}
+const error = (msj) => {
+    form.reset();
+    closeModal();
+    Swal.fire({ title: msj, icon: 'warning' });
 }
 
 const deleteCategory = (id, name) => {
@@ -97,6 +103,34 @@ const deleteCategory = (id, name) => {
 }
 </script>
 
+<style>
+        .PrimaryButton:hover .fa-solid{
+            animation: flipAnimation 0.5s;
+        }
+
+        .WarningButton:hover .fa-solid{
+            animation: flipAnimation 0.5s;
+        }
+
+        .DangerButton:hover .fa-solid{
+            animation: flipAnimation 0.5s;
+        }
+
+        @keyframes flipAnimation {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2) rotateY(200deg);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+
 <template>
     <Head title="Categorias" />
 
@@ -109,7 +143,7 @@ const deleteCategory = (id, name) => {
             <div class="bg-white grid v-screen place-items-center">
                 <div class="mt-3 mb-3 flex">
 
-                    <PrimaryButton @click="openModal(1)">
+                    <PrimaryButton data-tooltip="Agregar" @click="openModal(1)">
                         <i class="fa-solid fa-plus-circle"></i>&nbsp Agregar
                     </PrimaryButton>
 
@@ -134,12 +168,12 @@ const deleteCategory = (id, name) => {
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.state) }}</td>
                             <td class="border border-gray-400 px-2 py-2">{{ (cat.description) }}</td>
                             <td class="border border-gray-400 px-2 py-2">
-                                <WarningButton @click="openModal(2, cat.name, cat.state, cat.description, cat.id)">
+                                <WarningButton data-tooltip="Editar" @click="openModal(2, cat.name, cat.state, cat.description, cat.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
                             <td class="border border-gray-400 px-4 py-4">
-                                <DangerButton @click="deleteCategory(cat.id, cat.name, cat.state)">
+                                <DangerButton data-tooltip="Eliminar" @click="deleteCategory(cat.id, cat.name, cat.state)">
                                     <i class="fa-solid fa-trash"></i>
                                 </DangerButton>
                             </td>
