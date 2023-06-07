@@ -45,13 +45,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
-        // if($request->isMethod('photo')){
-
-        //     $product['photo'] = $request->file('photo')->store('uploads', 'public');
-
-        // }
-        // $product = new Product($request->all());
-        // $product->save();
         $product = request()->except('_token');
         if ($request->hasFile('photo')) {
 

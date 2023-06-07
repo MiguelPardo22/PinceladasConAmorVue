@@ -76,7 +76,7 @@ const save = () => {
 const ok = (msj) => {
     form.reset();
     closeModal();
-    Swal.fire({ title: msj, icon: 'success' });
+    Swal.fire({ title: msj, icon: 'success', confirmButtonText: 'Listo' });
 }
 const error = (msj) => {
     form.reset();
