@@ -27,7 +27,7 @@
         "datatables.net-vue3": "^2.1.0",
         "jszip": "^3.10.1",
         "pdfmake": "^0.2.7",
-        "sweetalert2": "^11.7.10",
+        "sweetalert2": "^11.4.8",
         "vue-chartjs": "^5.2.0",
         "vuestic-ui": "^1.6.5",
         "ziggy": "^2.4.0"
