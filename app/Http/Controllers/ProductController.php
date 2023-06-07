@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -74,9 +75,21 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $product->update($request->all());
+        // $product->update($request->all());
+
+        $productEdit = request()->except('_token', '_method');
+
+        if($request->hasFile('photo')){
+
+            $products = Product::findOrFail($id);
+            Storage::delete('public/'.$products->photo);
+            $productEdit['photo'] = $request->file('photo')->store('uploads', 'public');
+
+        }
+        
+        Product::where('id', '=', $id)->update($productEdit);
         return redirect('products');
     }
 

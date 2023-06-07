@@ -13,7 +13,7 @@
     left: 50%;
     transform: translateX(-50%);
     padding: 8px;
-    background-color: #d61a1a;
+    background-color: #8b1b4a;
     color: #ffffff;
     border-radius: 4px;
     font-size: 8px;
@@ -28,8 +28,8 @@
 </style>
 
 <template>
-    <button class="tooltip DangerButton inline-flex items-center px-4 py-2 bg-red-600 border border-transparent
-             rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-400
+    <button class="tooltip DangerButton inline-flex items-center px-4 py-2 bg-pink-800 border border-transparent
+             rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-pink-700
               active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
                transition ease-in-out duration-150" data-tooltip="">
         <slot />
