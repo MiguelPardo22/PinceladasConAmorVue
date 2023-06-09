@@ -152,7 +152,7 @@ const deleteCategory = (id, name) => {
             <div class="bg-white grid v-screen place-items-center overflow-x-auto">
                 <table class="table-auto border border-gray-400">
                     <thead>
-                        <tr class="bg-gray-100">
+                        <tr class="bg-purple-100">
                             <th class="px-2 py-2">#</th>
                             <th class="px-2 py-2">Categoria</th>
                             <th class="px-2 py-2">Estado</th>
@@ -163,11 +163,11 @@ const deleteCategory = (id, name) => {
                     </thead>
                     <tbody>
                         <tr v-for="cat, i in categories" :key="cat.id">
-                            <td class="border border-gray-400 px-2 py-2">{{ (i + 1) }}</td>
-                            <td class="border border-gray-400 px-2 py-2">{{ (cat.name) }}</td>
-                            <td class="border border-gray-400 px-2 py-2">{{ (cat.state) }}</td>
-                            <td class="border border-gray-400 px-2 py-2">{{ (cat.description) }}</td>
-                            <td class="border border-gray-400 px-2 py-2">
+                            <td class="border border-purple-400 px-2 py-2">{{ (i + 1) }}</td>
+                            <td class="border border-purple-400 px-2 py-2">{{ (cat.name) }}</td>
+                            <td class="border border-purple-400 px-2 py-2">{{ (cat.state) }}</td>
+                            <td class="border border-purple-400 px-2 py-2">{{ (cat.description) }}</td>
+                            <td class="border border-purple-400 px-2 py-2">
                                 <WarningButton data-tooltip="Editar" @click="openModal(2, cat.name, cat.state, cat.description, cat.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>

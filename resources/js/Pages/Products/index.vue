@@ -22,10 +22,11 @@ const id = ref('');
 
 const props = defineProps({
     products: { type: Object },
+    product_detail: {type: Object},
     categories: { type: Object }
 });
 const form = useForm({
-    reference: '', name: '', description: '', purchase_price: '', sale_price: '', id_cat_fk: '', photo: ''
+    reference: '', name: '', description: '', purchase_price: '', sale_price: '', id_cat_fk: '', photo: '', size: '', material: '', brand: ''
 });
 
 const formPage = useForm({});
@@ -34,7 +35,7 @@ const onPageClick = (event) => {
     formPage.get(route('products.index', { page: event }));
 };
 
-const openModal = (op, reference, name, description, purchase_price, sale_price, category, photo, product) => {
+const openModal = (op, reference, name, description, purchase_price, sale_price, category, photo, size, material, brand, product, product_detail) => {
 
     modal.value = true;
     operation.value = op
@@ -55,6 +56,9 @@ const openModal = (op, reference, name, description, purchase_price, sale_price,
         form.sale_price = sale_price;
         form.id_cat_fk = category;
         form.photo = photo;
+        form.size = size;
+        form.material = material;
+        form.brand = brand; 
 
 
     }
@@ -199,11 +203,12 @@ export default {
                             <td class="border border-purple-400 px-2 py-2"> <img :src="'/storage/' + pro.photo" alt="Foto" width="50" height="50"></td>
                             <td class="border border-purple-400 px-2 py-2">
                                 <WarningButton data-tooltip="Editar"
-                                    @click="openModal(2, pro.reference, pro.name, pro.description, pro.purchase_price, pro.sale_price, pro.id_cat_fk, pro.photo, pro.id)">
+                                    @click="openModal(2, pro.reference, pro.name, pro.description, pro.purchase_price, pro.sale_price, pro.id_cat_fk,
+                                     pro.photo, pro.product_detail, pro.product_detail, pro.product_detail, pro.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
-                            <td class="border border-gray-400 px-4 py-4">
+                            <td class="border border-purple-400 px-4 py-4">
                                 <DangerButton data-tooltip="Eliminar" @click="deleteProduct(pro.id, pro.name)">
                                     <i class="fa-solid fa-trash"></i>
                                 </DangerButton>
@@ -247,7 +252,7 @@ export default {
                 <div class="p-3">
                     <InputLabel for="purchase_price" value="Precio de Venta:"></InputLabel>
                     <TextInput id="purchase_price" ref="nameInput" v-model="form.sale_price" type="number"
-                        class="mt-1 block w-3/4" placeholder="Precio de Compra"></TextInput>
+                        class="mt-1 block w-3/4" placeholder="Precio de Venta"></TextInput>
                     <InputError :message="form.errors.sale_price"></InputError>
                 </div>
                 <div class="p-3">
@@ -261,6 +266,30 @@ export default {
                     <InputFile v-model="form.photo"></InputFile>
                     <InputError :message="form.errors.photo"></InputError>
                 </div>
+
+                <!-- Formulario para crear y editar los detalles del Producto -->
+
+                <div class="p-3">
+                    <InputLabel for="size" value="Tamaño:"></InputLabel>
+                    <TextInput id="size" ref="nameInput" v-model="form.size" type="text"
+                        class="mt-1 block w-3/4" placeholder="Tamaño"></TextInput>
+                    <InputError :message="form.errors.size"></InputError>
+                </div>
+
+                <div class="p-3">
+                    <InputLabel for="material" value="Material:"></InputLabel>
+                    <TextInput id="material" ref="nameInput" v-model="form.material" type="text"
+                        class="mt-1 block w-3/4" placeholder="Material"></TextInput>
+                    <InputError :message="form.errors.material"></InputError>
+                </div>
+
+                <div class="p-3">
+                    <InputLabel for="brand" value="Marca:"></InputLabel>
+                    <TextInput id="brand" ref="nameInput" v-model="form.brand" type="text"
+                        class="mt-1 block w-3/4" placeholder="Marca"></TextInput>
+                    <InputError :message="form.errors.brand"></InputError>
+                </div>
+
                 <div class="p-3 mt-6">
                     <PrimaryButton data-tooltip="Guardar" :disabled="form.processing" @click="save">
                         <i class="fa-solid fa-save"></i>&nbsp Guardar

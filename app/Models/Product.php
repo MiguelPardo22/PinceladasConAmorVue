@@ -10,4 +10,9 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = ['reference', 'name', 'description', 'purchase_price', 'sale_price', 'id_cat_fk', 'photo'];
+
+    public function product_detail()
+    {
+        return $this->hasMany('App\Models\Detail_Product', 'id', 'id_prof_fk');
+    }
 }
