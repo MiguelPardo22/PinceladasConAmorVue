@@ -13,6 +13,6 @@ class Product extends Model
 
     public function product_detail()
     {
-        return $this->hasMany('App\Models\Detail_Product', 'id', 'id_prof_fk');
+        return $this->hasMany('App\Models\Detail_Product', 'id', 'id_prod_fk');
     }
 }

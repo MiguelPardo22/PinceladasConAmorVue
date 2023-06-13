@@ -22,11 +22,11 @@ const id = ref('');
 
 const props = defineProps({
     products: { type: Object },
-    product_detail: {type: Object},
+    product_detail: { type: Object },
     categories: { type: Object }
 });
 const form = useForm({
-    reference: '', name: '', description: '', purchase_price: '', sale_price: '', id_cat_fk: '', photo: '', size: '', material: '', brand: ''
+    reference: '', name: '', description: '', purchase_price: '', sale_price: '', id_cat_fk: '', photo: '', size: '', material: '', brand: '', product_detail: ''
 });
 
 const formPage = useForm({});
@@ -48,7 +48,7 @@ const openModal = (op, reference, name, description, purchase_price, sale_price,
     } else {
 
         title.value = 'Editar Producto';
-
+        console.log(category);
         form.reference = reference
         form.name = name;
         form.description = description;
@@ -56,10 +56,16 @@ const openModal = (op, reference, name, description, purchase_price, sale_price,
         form.sale_price = sale_price;
         form.id_cat_fk = category;
         form.photo = photo;
-        form.size = size;
-        form.material = material;
-        form.brand = brand; 
 
+        console.log(product_detail);
+        
+
+        
+            form.size = size;
+            form.material = material;
+            form.brand = brand;
+            form.product_detail = product_detail
+    
 
     }
 
@@ -118,14 +124,14 @@ const deleteProduct = (id, name) => {
 <script>
 
 export default {
-  components: {
-    InputFile
-  },
-  data() {
-    return {
-      photo: null
-    };
-  }
+    components: {
+        InputFile
+    },
+    data() {
+        return {
+            photo: null
+        };
+    }
 };
 
 </script>
@@ -200,11 +206,11 @@ export default {
                             <td class="border border-purple-400 px-2 py-2">{{ (pro.purchase_price) }}</td>
                             <td class="border border-purple-400 px-2 py-2">{{ (pro.sale_price) }}</td>
                             <td class="border border-purple-400 px-2 py-2">{{ (pro.category) }}</td>
-                            <td class="border border-purple-400 px-2 py-2"> <img :src="'/storage/' + pro.photo" alt="Foto" width="50" height="50"></td>
+                            <td class="border border-purple-400 px-2 py-2"> <img :src="'/storage/' + pro.photo" alt="Foto"
+                                    width="50" height="50"></td>
                             <td class="border border-purple-400 px-2 py-2">
-                                <WarningButton data-tooltip="Editar"
-                                    @click="openModal(2, pro.reference, pro.name, pro.description, pro.purchase_price, pro.sale_price, pro.id_cat_fk,
-                                     pro.photo, pro.product_detail, pro.product_detail, pro.product_detail, pro.id)">
+                                <WarningButton data-tooltip="Editar" @click="openModal(2, pro.reference, pro.name, pro.description, pro.purchase_price, pro.sale_price, pro.id_cat_fk,
+                                    pro.photo, pro.product_detail, pro.product_detail, pro.product_detail, pro.id)">
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>
@@ -257,8 +263,8 @@ export default {
                 </div>
                 <div class="p-3">
                     <InputLabel for="id_cat_fk" value="Categoria:"></InputLabel>
-                    <SelectInput id="id_cat_fk" :options="categories" v-model="form.id_cat_fk"
-                        class="mt-1 block w-3/4"></SelectInput>
+                    <SelectInput id="id_cat_fk" :options="categories" v-model="form.id_cat_fk" class="mt-1 block w-3/4">
+                    </SelectInput>
                     <InputError :message="form.errors.id_cat_fk"></InputError>
                 </div>
                 <div class="p-3">
@@ -271,22 +277,22 @@ export default {
 
                 <div class="p-3">
                     <InputLabel for="size" value="Tamaño:"></InputLabel>
-                    <TextInput id="size" ref="nameInput" v-model="form.size" type="text"
-                        class="mt-1 block w-3/4" placeholder="Tamaño"></TextInput>
+                    <TextInput id="size" ref="nameInput" v-model="form.size" type="text" class="mt-1 block w-3/4"
+                        placeholder="Tamaño"></TextInput>
                     <InputError :message="form.errors.size"></InputError>
                 </div>
 
                 <div class="p-3">
                     <InputLabel for="material" value="Material:"></InputLabel>
-                    <TextInput id="material" ref="nameInput" v-model="form.material" type="text"
-                        class="mt-1 block w-3/4" placeholder="Material"></TextInput>
+                    <TextInput id="material" ref="nameInput" v-model="form.material" type="text" class="mt-1 block w-3/4"
+                        placeholder="Material"></TextInput>
                     <InputError :message="form.errors.material"></InputError>
                 </div>
 
                 <div class="p-3">
                     <InputLabel for="brand" value="Marca:"></InputLabel>
-                    <TextInput id="brand" ref="nameInput" v-model="form.brand" type="text"
-                        class="mt-1 block w-3/4" placeholder="Marca"></TextInput>
+                    <TextInput id="brand" ref="nameInput" v-model="form.brand" type="text" class="mt-1 block w-3/4"
+                        placeholder="Marca"></TextInput>
                     <InputError :message="form.errors.brand"></InputError>
                 </div>
 

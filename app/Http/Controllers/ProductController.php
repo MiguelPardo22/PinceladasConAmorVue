@@ -26,12 +26,17 @@ class ProductController extends Controller
             'sale_price',
             'id_cat_fk',
             'photo',
-            'categories.name as category'
+            'categories.name as category',
+            'product_details.size',
+            'product_details.material',
+            'product_details.brand'
         )
+            ->leftJoin('product_details', 'product_details.id_prod_fk', '=', 'products.id')
             ->join('categories', 'categories.id', '=', 'products.id_cat_fk')->paginate(10);
 
         $categories = Category::all();
-        return Inertia::render('Products/index', ['products' => $products, 'categories' => $categories]);
+        $product_detail = Product_Detail::all();
+        return Inertia::render('Products/index', ['products' => $products, 'categories' => $categories, 'product_detail' => $product_detail]);
     }
 
     /**
@@ -144,21 +149,21 @@ class ProductController extends Controller
         //     'brand.required' => 'El campo marca es requerido'
         // ]);
 
+        $product = Product::findOrFail($id);
+        $productDetail = Product_Detail::findOrFail($id);
+
         $productEdit = request()->except('_token', '_method');
-        $productDetailEdit = request()->except('_token', '_method', 'reference', 'name',
-         'description', 'purchase_price', 'sale_price', 'id_cat_fk', 'photo');
+        $productDetailEdit = request()->except('_token', '_method');
 
-        if($request->hasFile('photo')){
+        if ($request->hasFile('photo')) {
 
-            $products = Product::findOrFail($id);
-            Storage::delete('public/'.$products->photo);
+            Storage::delete('public/' . $product->photo);
             $productEdit['photo'] = $request->file('photo')->store('uploads', 'public');
-
         }
-        
-        Product::where('id', '=', $id)->update($productEdit);
-        Product_Detail::where('id', '=', $id)->update($productDetailEdit);
-         
+
+        $product->update($productEdit);
+        $productDetail->update($productDetailEdit);
+
         return redirect('products');
     }
 
